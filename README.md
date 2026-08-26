@@ -21,6 +21,23 @@ header rows and multiple stacked tables), and loads it into a pandas
 DataFrame. From there, it filters and aggregates the data to calculate 
 each statistic.
 
+## Object-Oriented Version
+`trading_journal.py` refactors the core analytics into a `TradingJournal` 
+class — the same calculations as `Journal_analytics.py`, restructured 
+around state instead of a single function returning a dictionary.
+
+```python
+journal = TradingJournal(df)
+journal.calculate_all_stats()
+journal.print_summary()
+```
+
+Each stat (win rate, profit factor, expectancy, drawdown) is calculated 
+by its own method and stored as an attribute on the object, making it 
+easier to extend with new metrics later. The class also classifies each 
+trade by session — London or New York, based on the trade's open hour — 
+and breaks down average profit per session using `groupby`.
+
 ## Sample output
 winrate: 62.5
 win_average: 173.4
