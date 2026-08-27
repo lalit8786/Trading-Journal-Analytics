@@ -1,2 +1,5 @@
 __pycache__/
 *.pyc
+summary.txt
+practice/profit_log.txt
+practice/trade_log.txt
