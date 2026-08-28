@@ -53,6 +53,10 @@ class TradingJournal:
                 return "Other"
         self.df["session"] = self.df["hour"].apply(get_session)
         self.session_stats = self.df.groupby("session")["profit"].mean()
+    def log_trades(self,trade_dict):
+        new_row_df = pd.DataFrame([trade_dict])
+        self.df = pd.concat([self.df, new_row_df], ignore_index=True)
+        self.calculate_all_stats()
     def print_summary(self):
         if self.win_rate is None:
             print("Run calculate_all_stats() first.")
@@ -81,5 +85,8 @@ df = df.iloc[0:8]
 df.columns = ["open_time", "position_id", "symbol", "type", "volume", "open_price","sl", "tp", "close_time", "close_price", "commission", "swap", "profit", "extra"]
 journal = TradingJournal(df)
 journal.calculate_all_stats()
+print("Before:",journal.win_rate)
 journal.print_summary()
 journal.save_summary_to_file()
+journal.log_trades({"open_time":"2026-08-27 10:00:00", "profit":550.00})
+print ("after:",journal.win_rate)
