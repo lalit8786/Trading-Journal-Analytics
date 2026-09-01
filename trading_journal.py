@@ -57,6 +57,12 @@ class TradingJournal:
         new_row_df = pd.DataFrame([trade_dict])
         self.df = pd.concat([self.df, new_row_df], ignore_index=True)
         self.calculate_all_stats()
+    def undo_last_trade(self):
+        if len(self.df) == 0:
+            print("No trades to remove.") 
+            return
+        self.df = self.df.iloc[:-1]
+        self.calculate_all_stats()
     def print_summary(self):
         if self.win_rate is None:
             print("Run calculate_all_stats() first.")
@@ -90,3 +96,5 @@ journal.print_summary()
 journal.save_summary_to_file()
 journal.log_trades({"open_time":"2026-08-27 10:00:00", "profit":550.00})
 print ("after:",journal.win_rate)
+journal.undo_last_trade()
+print("After undoing last trade:",journal.win_rate)
