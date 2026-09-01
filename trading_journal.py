@@ -7,6 +7,8 @@ class TradingJournal:
         self.expectancy = None
         self.drawdown = None
         self.session_stats= None
+        self.best_trade = None
+        self.worst_trade = None
 
     def calculate_all_stats(self):
         self.calculate_win_rate()
@@ -14,7 +16,8 @@ class TradingJournal:
         self.calculate_expectancy()
         self.calculate_drawdown()
         self.classify_session()
-
+        self.find_best_worst_trade()
+        
     def calculate_win_rate(self):
         win = self.df[self.df["profit"] > 0]
         self.win_rate = len(win) / len(self.df) * 100
@@ -63,6 +66,11 @@ class TradingJournal:
             return
         self.df = self.df.iloc[:-1]
         self.calculate_all_stats()
+    def find_best_worst_trade(self):
+        best_index = self.df["profit"].idxmax()
+        self.best_trade = self.df.loc[best_index]
+        worst_index = self.df["profit"].idxmin()
+        self.worst_trade = self.df.loc[worst_index]
     def print_summary(self):
         if self.win_rate is None:
             print("Run calculate_all_stats() first.")
@@ -86,6 +94,10 @@ class TradingJournal:
          f.write(f"Drawdown: {self.drawdown:.2f}\n")
          f.write("Session Breakdown:\n")
          f.write(self.session_stats.to_string())
+         f.write("\nBest Trade:\n")
+         f.write(self.best_trade.to_string())
+         f.write("\nWorst Trade:\n")
+         f.write(self.worst_trade.to_string())
 df = pd.read_excel("ReportHistory-25858699.xlsx", skiprows=6)
 df = df.iloc[0:8]
 df.columns = ["open_time", "position_id", "symbol", "type", "volume", "open_price","sl", "tp", "close_time", "close_price", "commission", "swap", "profit", "extra"]
@@ -98,3 +110,6 @@ journal.log_trades({"open_time":"2026-08-27 10:00:00", "profit":550.00})
 print ("after:",journal.win_rate)
 journal.undo_last_trade()
 print("After undoing last trade:",journal.win_rate)
+journal.find_best_worst_trade()
+print("Best Trade:\n",journal.best_trade)
+print("Worst Trade:\n",journal.worst_trade)
