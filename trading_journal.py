@@ -113,3 +113,23 @@ print("After undoing last trade:",journal.win_rate)
 journal.find_best_worst_trade()
 print("Best Trade:\n",journal.best_trade)
 print("Worst Trade:\n",journal.worst_trade)
+while True:
+    print("1. View Summary")
+    print("2. Log a Trade")
+    print("3. Undo Last Trade")
+    print("4. Exit")
+    choice = input("Choose an option: ")
+
+    if choice == "1":
+        journal.print_summary()
+    elif choice == "2":
+        open_time = input("Enter open time (YYYY-MM-DD HH:MM:SS): ")
+        profit = float(input("Enter profit: "))
+        trade_dict = {"open_time": open_time, "profit": profit}
+        journal.log_trades(trade_dict)
+    elif choice == "3":
+        journal.undo_last_trade()
+    elif choice == "4":
+        break
+    else:
+        print("Invalid option, try again.")
