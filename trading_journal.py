@@ -117,7 +117,9 @@ while True:
     print("1. View Summary")
     print("2. Log a Trade")
     print("3. Undo Last Trade")
-    print("4. Exit")
+    print("4. View Best and Worst Trade")
+    print("5. Save Summary to File")
+    print("6. Exit")
     choice = input("Choose an option: ")
 
     if choice == "1":
@@ -130,6 +132,15 @@ while True:
     elif choice == "3":
         journal.undo_last_trade()
     elif choice == "4":
+        journal.find_best_worst_trade()
+        print("Best Trade:\n", journal.best_trade)
+        print("Worst Trade:\n", journal.worst_trade)
+    elif choice == "5":
+        filename = input("Enter filename to save summary (default: summary.txt): ")
+        if filename == "":
+            filename = "summary.txt"
+            journal.save_summary_to_file(filename)
+    elif choice == "6":
         break
     else:
         print("Invalid option, try again.")
