@@ -98,49 +98,50 @@ class TradingJournal:
          f.write(self.best_trade.to_string())
          f.write("\nWorst Trade:\n")
          f.write(self.worst_trade.to_string())
-df = pd.read_excel("ReportHistory-25858699.xlsx", skiprows=6)
-df = df.iloc[0:8]
-df.columns = ["open_time", "position_id", "symbol", "type", "volume", "open_price","sl", "tp", "close_time", "close_price", "commission", "swap", "profit", "extra"]
-journal = TradingJournal(df)
-journal.calculate_all_stats()
-print("Before:",journal.win_rate)
-journal.print_summary()
-journal.save_summary_to_file()
-journal.log_trades({"open_time":"2026-08-27 10:00:00", "profit":550.00})
-print ("after:",journal.win_rate)
-journal.undo_last_trade()
-print("After undoing last trade:",journal.win_rate)
-journal.find_best_worst_trade()
-print("Best Trade:\n",journal.best_trade)
-print("Worst Trade:\n",journal.worst_trade)
-while True:
-    print("1. View Summary")
-    print("2. Log a Trade")
-    print("3. Undo Last Trade")
-    print("4. View Best and Worst Trade")
-    print("5. Save Summary to File")
-    print("6. Exit")
-    choice = input("Choose an option: ")
+if __name__ == "__main__":
+    df = pd.read_excel("ReportHistory-25858699.xlsx", skiprows=6)
+    df = df.iloc[0:8]
+    df.columns = ["open_time", "position_id", "symbol", "type", "volume", "open_price","sl", "tp", "close_time", "close_price", "commission", "swap", "profit", "extra"]
+    journal = TradingJournal(df)
+    journal.calculate_all_stats()
+    print("Before:",journal.win_rate)
+    journal.print_summary()
+    journal.save_summary_to_file()
+    journal.log_trades({"open_time":"2026-08-27 10:00:00", "profit":550.00})
+    print ("after:",journal.win_rate)
+    journal.undo_last_trade()
+    print("After undoing last trade:",journal.win_rate)
+    journal.find_best_worst_trade()
+    print("Best Trade:\n",journal.best_trade)
+    print("Worst Trade:\n",journal.worst_trade)
+    while True:
+        print("1. View Summary")
+        print("2. Log a Trade")
+        print("3. Undo Last Trade")
+        print("4. View Best and Worst Trade")
+        print("5. Save Summary to File")
+        print("6. Exit")
+        choice = input("Choose an option: ")
 
-    if choice == "1":
-        journal.print_summary()
-    elif choice == "2":
-        open_time = input("Enter open time (YYYY-MM-DD HH:MM:SS): ")
-        profit = float(input("Enter profit: "))
-        trade_dict = {"open_time": open_time, "profit": profit}
-        journal.log_trades(trade_dict)
-    elif choice == "3":
-        journal.undo_last_trade()
-    elif choice == "4":
-        journal.find_best_worst_trade()
-        print("Best Trade:\n", journal.best_trade)
-        print("Worst Trade:\n", journal.worst_trade)
-    elif choice == "5":
-        filename = input("Enter filename to save summary (default: summary.txt): ")
-        if filename == "":
-            filename = "summary.txt"
+        if choice == "1":
+            journal.print_summary()
+        elif choice == "2":
+            open_time = input("Enter open time (YYYY-MM-DD HH:MM:SS): ")
+            profit = float(input("Enter profit: "))
+            trade_dict = {"open_time": open_time, "profit": profit}
+            journal.log_trades(trade_dict)
+        elif choice == "3":
+            journal.undo_last_trade()
+        elif choice == "4":
+            journal.find_best_worst_trade()
+            print("Best Trade:\n", journal.best_trade)
+            print("Worst Trade:\n", journal.worst_trade)
+        elif choice == "5":
+            filename = input("Enter filename to save summary (default: summary.txt): ")
+            if filename == "":
+                filename = "summary.txt"
             journal.save_summary_to_file(filename)
-    elif choice == "6":
-        break
-    else:
-        print("Invalid option, try again.")
+        elif choice == "6":
+            break
+        else:
+            print("Invalid option, try again.")
