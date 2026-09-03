@@ -38,6 +38,23 @@ easier to extend with new metrics later. The class also classifies each
 trade by session — London or New York, based on the trade's open hour — 
 and breaks down average profit per session using `groupby`.
 
+## Streamlit Dashboard
+`app.py` turns the `TradingJournal` class into a live web dashboard — 
+metrics, charts, and trade logging without touching the code.
+
+- Win rate, profit factor, expectancy, and drawdown as metric cards
+- Average profit by session, as a bar chart
+- Full trade history in an interactive table
+- A form to log new trades and an undo button — both update the 
+  dashboard instantly via `st.session_state`
+
+Run it with:
+
+\`\`\`bash
+pip install pandas streamlit openpyxl
+streamlit run app.py
+\`\`\`
+
 ## Sample output
 winrate: 62.5
 win_average: 173.4
