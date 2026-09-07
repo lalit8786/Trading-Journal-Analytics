@@ -39,9 +39,9 @@ class TradingJournal:
         self.expectancy = (winrate/100 * win_average) + (loss_rate/100 * loss_average)
 
     def calculate_drawdown(self):
-        running_balance = self.df["profit"].cumsum()
-        peak = running_balance.cummax()
-        drawdown = running_balance - peak
+        self.running_balance = self.df["profit"].cumsum()
+        peak = self.running_balance.cummax()
+        drawdown = self.running_balance - peak
         self.drawdown = drawdown.min()
 
     def classify_session(self):

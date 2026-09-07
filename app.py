@@ -1,16 +1,16 @@
 import streamlit as st
 import pandas as pd
+import sqlite3
 from trading_journal import TradingJournal
 
 st.set_page_config(page_title="Trading Journal Dashboard", layout="wide")
 @st.cache_data
-def load_data():
-    df = pd.read_excel("ReportHistory-25858699.xlsx", skiprows=6)
-    df = df.iloc[0:8]
-    df.columns = ["open_time", "position_id", "symbol", "type", "volume",
-                  "open_price", "sl", "tp", "close_time", "close_price",
-                  "commission", "swap", "profit", "extra"]
-    return df
+def load_data(): 
+ conn=sqlite3.connect("trading_journal.db") 
+ cursor= conn.cursor()
+ df = pd.read_sql_query("SELECT * FROM trades", conn)
+ conn.close()
+ return df
 
 if "journal" not in st.session_state:
     df = load_data()
@@ -34,6 +34,10 @@ st.divider()
 st.subheader("All Trades")
 st.dataframe(journal.df, use_container_width=True)
 
+st.divider()
+st.subheader("Equity Curve")
+st.line_chart(journal.running_balance)
+
 st.subheader("Log a New Trade")
 with st.form("log_trade_form", clear_on_submit=True):
     open_time = st.text_input("Open Time (YYYY-MM-DD HH:MM:SS)")
@@ -46,10 +50,19 @@ with st.form("log_trade_form", clear_on_submit=True):
         else:
             trade_dict = {"open_time": open_time, "profit": profit}
             journal.log_trades(trade_dict)
+            conn = sqlite3.connect("trading_journal.db")
+            cursor = conn.cursor()
+            cursor.execute("INSERT INTO trades (open_time, profit) VALUES (?, ?)", (open_time, profit))
+            conn.commit()
+            conn.close()
             st.success("Trade logged! Stats refreshed below.")
             st.rerun()
-
 if st.button("Undo Last Trade"):
     journal.undo_last_trade()
+    conn = sqlite3.connect("trading_journal.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM trades WHERE rowid = (SELECT MAX(rowid) FROM trades)")
+    conn.commit()
+    conn.close()
     st.success("Last trade undone.")
     st.rerun()
