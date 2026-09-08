@@ -27,7 +27,10 @@ class TradingJournal:
         loss = self.df[self.df["profit"] < 0]
         total_won = win["profit"].sum()
         total_loss = loss["profit"].sum()
-        self.profit_factor = total_won / abs(total_loss)
+        if total_loss == 0:
+            self.profit_factor = float('inf')
+        else:
+            self.profit_factor = total_won / abs(total_loss)
 
     def calculate_expectancy(self):
         win = self.df[self.df["profit"] > 0]
@@ -36,6 +39,10 @@ class TradingJournal:
         loss_rate = 100 - winrate
         win_average = win["profit"].mean()
         loss_average = loss["profit"].mean()
+        if len(loss) ==0:
+            loss_average = 0
+        if len(win) ==0:
+            win_average = 0
         self.expectancy = (winrate/100 * win_average) + (loss_rate/100 * loss_average)
 
     def calculate_drawdown(self):
