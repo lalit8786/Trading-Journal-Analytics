@@ -19,7 +19,7 @@ with open("profit_log.txt", "w") as f:
 with open("profit_log.txt", "r") as f:
     content = f.read()
     print(content)
-def save_summary_to_file(self, filename="summmary.txt"):
+def save_summary_to_file(self, filename="summary.txt"):
     if self.win_rate is None:
         print("Run calculate_all_stats() first.")
         return
@@ -30,4 +30,4 @@ def save_summary_to_file(self, filename="summmary.txt"):
     f.write(f"Expectancy: {self.expectancy:.2f}\n")
     f.write(f"Drawdown: {self.drawdown:.2f}\n")
     f.write("Session Breakdown:\n")
-    f.write(self.session_stats)
+    f.write(str(self.session_stats))
