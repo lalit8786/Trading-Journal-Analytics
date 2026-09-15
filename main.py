@@ -24,3 +24,11 @@ async def log_trade(trade: Trade):
     conn.commit()
     conn.close()
     return {"message": "Trade logged successfully."}
+@app.delete("/trades")
+async def delete_trades (rowid: int):
+    conn = sqlite3.connect("trading_journal.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM trades WHERE rowid = ?", (rowid,))  
+    conn.commit()
+    conn.close()
+    return {"message": "Trade deleted successfully."}   
