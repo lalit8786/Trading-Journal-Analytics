@@ -57,7 +57,7 @@ class TradingJournal:
         def get_session(hour):
             if hour >= 7 and hour < 11:
                 return "London"
-            elif hour >= 13 and hour < 17:
+            elif hour >= 13 and hour < 18:
                 return "New York"
             else:
                 return "Other"
